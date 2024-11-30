@@ -1,10 +1,9 @@
 import './App.css';
+import Body from './components/Body';
 
 function App() {
   return (
-    <div className="font-bold text-center p-2 m-2">
-      Nameste netflix GPT
-    </div>
+    <Body />
   );
 }
 
