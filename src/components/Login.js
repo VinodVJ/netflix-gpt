@@ -1,4 +1,9 @@
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import React, { useRef, useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../utils/firebase';
+import { addUser } from '../utils/userSlice';
 import { validateSignInForm } from '../utils/validate';
 import Header from './Header'
 
@@ -7,7 +12,10 @@ const Login = () => {
     const [isSignInToggle, setIsSignInToggle] = useState(true)
     const email = useRef(null);
     const password = useRef(null);
+    const name = useRef(null);
     const [errorMessage, setErrorMessage] = useState(null);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const toggleSiginIn = () => {
         setIsSignInToggle(!isSignInToggle);
@@ -16,6 +24,43 @@ const Login = () => {
     const handleSignInClick = () => {
         const message = validateSignInForm(email.current.value, password.current.value);
         setErrorMessage(message);
+
+        if (message) return;
+
+        if (isSignInToggle) {
+            signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+            .then((userCredential) => {
+              const user = userCredential.user;
+              console.log(user);
+              navigate('/browse');
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              setErrorMessage(errorCode + '-' +errorMessage);
+            });
+        } else {
+            createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                console.log(user);
+                updateProfile(user, {
+                displayName: name.current.value, photoURL: ""
+              }).then(() => {
+                const {uid, email, displayName} = auth.currentUser;
+                dispatch(addUser({uid: uid, email: email, displayName: displayName}));
+                navigate('/browse');
+              }).catch((error) => {
+                // An error occurred
+              });
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                setErrorMessage(errorCode + '-' +errorMessage);
+            });
+            
+        }
     }
 
     return (
@@ -33,7 +78,7 @@ const Login = () => {
                     {isSignInToggle ? 'Sign In' : 'Sign Up'}
                 </h1>
                {!isSignInToggle &&(
-                    <input type='text' placeholder='Full Name'
+                <input ref={name} type='text' placeholder='Full Name'
                         className='p-4 my-4 w-full bg-gray-700' />
                 )}
                 <input ref={email} type='text' placeholder='Email Address'
