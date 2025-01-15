@@ -37,18 +37,18 @@ const Header = () => {
     }
 
     return (
-        <div className='absolute w-screen px-8 py-2 bg-gradient-to-b from-black z-30 flex justify-between'>
-            <img className='w-44'
+        <div className='absolute w-screen px-8 py-2 bg-gradient-to-b from-black z-30 flex flex-col md:flex-row justify-between'>
+            <img className='w-44 mx-auto md:mx-0'
                 src={LOGO}
                 alt='logo' />
 
             {user && 
-            (<div className='flex p-2'>
+            (<div className='flex justify-between p-2'>
                 <button className='bg-purple-500 rounded-lg px-4 mx-4'
                     onClick={handleGptSearch}>
                     GPT Search
                 </button>
-                <img className='w-12 h-12'
+                <img className='hidden md:block w-12 h-12'
                     src={USER_AVATAR}
                     alt='UserLogo' />
                 <button onClick={handleUserSignout} className='text-white font-bold'>(Sign Out)</button>

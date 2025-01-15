@@ -65,12 +65,12 @@ const Login = () => {
             <Header />
 
             <div className='absolute'>
-                <img src={LOGIN_BG_IMG}
+                <img className='h-screen object-cover' src={LOGIN_BG_IMG}
                     alt='background' />
             </div>
 
             <form onSubmit={(e) => {e.preventDefault()}}
-                className='absolute w-3/12 p-12 bg-black my-36 mx-auto right-0 left-0 text-white bg-opacity-80'>
+                className='absolute w-full md:w-3/12 p-12 bg-black my-36 mx-auto right-0 left-0 text-white bg-opacity-80'>
                 <h1 className='font-bold text-3xl py-4'>
                     {isSignInToggle ? 'Sign In' : 'Sign Up'}
                 </h1>
